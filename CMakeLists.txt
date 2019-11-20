@@ -351,19 +351,8 @@ endif(MSVC OR MINGW)
 
 if(OCE_VISUALISATION AND OCE_WITH_VTK)
 	# Try to find the required VTK components.
-	find_package(VTK QUIET COMPONENTS vtkCommonCore vtkInteractionStyle vtkIOExport vtkIOLegacy)
-
-	# Now that we know we have a VTK version available, we call find_package with the correct rendering backend.
-	if( NOT(VTK_VERSION_MAJOR LESS 7) AND VTK_RENDERING_BACKEND)
-		# In VTK 7, the rendering backend is exported in the variable VTK_RENDERING_BACKEND
-		find_package(VTK QUIET COMPONENTS vtkRendering${VTK_RENDERING_BACKEND} vtkCommonCore vtkInteractionStyle vtkIOExport vtkIOLegacy)
-	else()
-		find_package(VTK QUIET COMPONENTS vtkRenderingOpenGL vtkCommonCore vtkInteractionStyle vtkIOExport vtkIOLegacy)
-	endif()
-
-	if (TARGET vtkRenderingOpenGL2)
-		add_definitions(-DOCE_VTK_OPENGL2_BACKEND)
-	endif()
+        find_package(VTK REQUIRED)
+        add_definitions(-DOCE_VTK_OPENGL2_BACKEND)
 endif()
 
 set(INSTALL_STDRESOURCE_FILES)
@@ -927,7 +916,7 @@ endif(IS_ABSOLUTE ${OCE_INSTALL_DATA_DIR})
 
 # CMake
 if(NOT DEFINED OCE_INSTALL_CMAKE_DATA_DIR)
-	#  See http://www.cmake.org/cmake/help/cmake-2-8-docs.html#command:find_package
+	#  See http://www.cmake.org/cmake/help/cmake-2-8-docs.html#command:find_package
 	#  and the definition of OCE_INSTALL_PREFIX at the beginning.
 	#  CMake files are installed under INSTALL_PREFIX/INSTALL_CMAKE_DATA_DIR.
 	if(WIN32)
